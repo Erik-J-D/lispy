@@ -1,4 +1,5 @@
 from collections import ChainMap
+from functools import reduce
 
 
 class DeepChainMap(ChainMap):
@@ -17,3 +18,14 @@ class DeepChainMap(ChainMap):
                 del mapping[key]
                 return
         raise KeyError(key)
+
+
+def reduce_min_args(op, min_args=2, name=None):
+    def fun(*args):
+        if len(args) < min_args:
+            human_name = name or op.__name__
+            raise Exception(
+                f"{human_name} expected {min_args} arguments, "
+                f"got {len(args)}")
+        return reduce(op, args)
+    return fun

@@ -3,7 +3,7 @@ import operator as op
 from functools import reduce
 from typing import Any
 
-from .util import DeepChainMap
+from .util import DeepChainMap, reduce_min_args
 
 Env = dict[bytes, Any]
 
@@ -12,17 +12,17 @@ def default_env() -> Env:
     env = {}
 
     # Math
-    env |= {"+": op.add,
-            "-": op.sub,
-            "*": op.mul,
-            "/": op.truediv,
+    env |= {"+": reduce_min_args(op.add),
+            "-": reduce_min_args(op.sub),
+            "*": reduce_min_args(op.mul),
+            "/": reduce_min_args(op.truediv),
             "abs": abs,
             "complex": complex,
             "max": max,
             "min": min,
-            "mod": op.mod,
+            "mod": reduce_min_args(op.mod),
             "neg": op.neg,
-            "pow": op.pow,
+            "pow": reduce_min_args(op.pow),
             "round": round}
 
     # Comparisons
@@ -75,9 +75,7 @@ def eval_expr(exp, env: Env = default_env()):
             sub_env = DeepChainMap({}, env)
             return reduce(lambda _, e: eval_expr(e, sub_env), expr_list, None)
         case(b"lambda", params, body):
-            return lambda *args: eval_expr(
-                body,
-                DeepChainMap(dict(zip(params, args)), env))
+            return mk_function(params, body, env)
 
         # Last case: evaluate the function
         case(func, *args):
@@ -88,3 +86,15 @@ def eval_expr(exp, env: Env = default_env()):
         # Fail
         case _:
             raise NotImplementedError(f"Don't know how to handle:\n{exp}")
+
+
+def mk_function(params, body, env):
+    def func(*args):
+        if len(args) != len(params):
+            raise Exception(
+                f"lambda expected {len(params)} arguments, got {len(args)}")
+        else:
+            return eval_expr(
+                body,
+                DeepChainMap(dict(zip(params, args)), env))
+    return func
