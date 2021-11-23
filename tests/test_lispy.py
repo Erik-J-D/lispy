@@ -43,17 +43,20 @@ def test_begin():
 def test_apply():
     assert eval_expr(
         (b"begin",
-            (b"define", b"func", (b"lambda", (b"a", b"b"), (b"+", b"a", b"b"))),
+            (b"define", b"func",
+                (b"lambda", (b"a", b"b"), (b"+", b"a", b"b"))),
             (b"func", 5, 6))) == 11
 
     assert eval_expr(
         (b"begin",
-            (b"define", b"func", (b"lambda", (b"a", b"b"), (b"+", b"a", b"b"))),
+            (b"define", b"func",
+                (b"lambda", (b"a", b"b"), (b"+", b"a", b"b"))),
             (b"func", 5, (b"add1", 7)))) == 13
 
     assert eval_expr(
         (b"begin",
-            (b"define", b"func", (b"lambda", (b"a", b"b"), (b"pow", b"a", b"b"))),
+            (b"define", b"func",
+                (b"lambda", (b"a", b"b"), (b"pow", b"a", b"b"))),
             (b"func", (b"if", (b"=", 5, 6), 19.2, 2), (b"add1", 7)))) == 256
 
     assert eval_expr(((b"lambda", (b"x",), (b"+", b"x", 4)), 5)) == 9
@@ -62,9 +65,10 @@ def test_apply():
 def test_recusion():
     assert eval_expr(
         (b"begin",
-            (b"define", b"bad_double", (b"lambda", (b"num",),
-                                        (b"if",
-                                        (b"<=", b"num", 0),
-                                        0,
-                                        (b"+", 2, (b"bad_double", (b"sub1", b"num")))))),
+            (b"define", b"bad_double",
+                (b"lambda", (b"num",),
+                 (b"if",
+                  (b"<=", b"num", 0),
+                  0,
+                  (b"+", 2, (b"bad_double", (b"sub1", b"num")))))),
             (b"bad_double", 7))) == 14

@@ -12,42 +12,40 @@ def default_env() -> Env:
     env = {}
 
     # Math
-    env |= {
-        "+": op.add,
-        "-": op.sub,
-        "*": op.mul,
-        "/": op.truediv,
-        "abs": abs,
-        "complex": complex,
-        "max": max,
-        "min": min,
-        "mod": op.mod,
-        "neg": op.neg,
-        "pow": op.pow,
-        "round": round
-    }
+    env |= {"+": op.add,
+            "-": op.sub,
+            "*": op.mul,
+            "/": op.truediv,
+            "abs": abs,
+            "complex": complex,
+            "max": max,
+            "min": min,
+            "mod": op.mod,
+            "neg": op.neg,
+            "pow": op.pow,
+            "round": round}
 
     # Comparisons
     env |= {"<": op.lt, "<=": op.le, "=": op.eq,
             "!=": op.ne, ">": op.gt, ">=": op.ge, "not": op.not_}
 
     # List
-    env |= {
-        "car": lambda x: x[0],
-        "cdr": lambda x: x[1:],
-        "cons": lambda a, d: (a,) + d,
-        "len": len,
-        "null?": lambda x: x == ()
-    }
+    env |= {"car": lambda x: x[0],
+            "cdr": lambda x: x[1:],
+            "cons": lambda a, d: (a,) + d,
+            "len": len,
+            "list": lambda *x: tuple(x),
+            "null?": lambda x: x == ()}
 
     # Other
-    env |= {
-        "add1": lambda x: x+1,
-        "sub1": lambda x: x-1,
-        "print": print,
-        "procedure?": callable
-    }
+    env |= {"add1": lambda x: x+1,
+            "sub1": lambda x: x-1,
+            "and": lambda *x: all(x),
+            "or": lambda *x: any(x),
+            "print": print,
+            "procedure?": callable}
 
+    # Turn all the keys into bytes instead of strings
     return {bytes(k, "utf-8"): v for k, v in env.items()}
 
 

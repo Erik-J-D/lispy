@@ -16,4 +16,16 @@ $ poetry install
 $ poetry run pytest
 ```
 
+## How to get a REPL:
+
+```
+$ poetry run python lispy/repl.py
+```
+
+## TODO:
+- [ ] Better testing for parsing
+- [ ] Add quoting
+- [ ] Make `define` behave like a lisp define, not every other languages assignment.
+    - Maybe also add `set`, `let`, etc?
+
 Make sure you're running at least python 3.10, otherwise nothing will work.
